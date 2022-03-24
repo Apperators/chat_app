@@ -1,7 +1,15 @@
+import { Avatar, Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
+import styled from "@emotion/styled";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+
+const Header = styled.h1`
+  color: red;
+  line-height: 1.15;
+  font-size: 4rem;
+`;
 
 const Home: NextPage = () => {
   return (
@@ -16,44 +24,34 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Cool to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <Header>Chat App</Header>
 
-        <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
+        <Wrap>
+          <WrapItem>
+            <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
+          </WrapItem>
+          <WrapItem>
+            <Avatar name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
+          </WrapItem>
+          <WrapItem>
+            <Avatar name="Ryan Florence" src="https://bit.ly/ryan-florence" />
+          </WrapItem>
+        </Wrap>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <Stack direction="row" spacing={4} align="center">
+          <Button colorScheme="teal" variant="solid">
+            Button
+          </Button>
+          <Button colorScheme="teal" variant="outline">
+            Button
+          </Button>
+          <Button colorScheme="teal" variant="ghost">
+            Button
+          </Button>
+          <Button colorScheme="teal" variant="link">
+            Button
+          </Button>
+        </Stack>
       </main>
 
       <footer className={styles.footer}>
