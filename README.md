@@ -1,9 +1,3 @@
-Coolest Chat App
+#### This is the frontend domain.
 
-I agree
-
-totes
-
-Does this Work? yes. yes it does
-
-pushing from stackblitz
+#### No permission allow.
