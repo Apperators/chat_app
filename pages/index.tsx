@@ -6,6 +6,7 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import prisma from "../lib/prisma";
 import Post, { PostProps } from "../components/Post";
+import SocketIOClient from "./SocketIOClient";
 
 export const getStaticProps: GetStaticProps = async () => {
   const feed = await prisma.post.findMany({
@@ -75,7 +76,7 @@ const Home: NextPage<Props> = (props) => {
           </Button>
         </Stack>
       </main>
-
+      <SocketIOClient />
       <footer className={styles.footer}>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
