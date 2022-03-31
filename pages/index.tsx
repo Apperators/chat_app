@@ -1,9 +1,23 @@
 import { Avatar, Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import prisma from "../lib/prisma";
+import Post, { PostProps } from "../components/Post";
+
+export const getStaticProps: GetStaticProps = async () => {
+  const feed = await prisma.post.findMany({
+    where: { published: false },
+    include: {
+      author: {
+        select: { name: true },
+      },
+    },
+  });
+  return { props: { feed } };
+};
 
 const Header = styled.h1`
   color: red;
@@ -11,7 +25,11 @@ const Header = styled.h1`
   font-size: 4rem;
 `;
 
-const Home: NextPage = () => {
+type Props = {
+  feed: PostProps[];
+};
+
+const Home: NextPage<Props> = (props) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -25,7 +43,11 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <Header>Chat App</Header>
-
+        {props.feed.map((post) => (
+          <div key={post.id} className="post">
+            <Post post={post} />
+          </div>
+        ))}
         <Wrap>
           <WrapItem>
             <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
