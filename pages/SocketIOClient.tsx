@@ -25,7 +25,7 @@ const SocketIOClient = () => {
     });
   }, []);
 
-  return <h1>Socket.io</h1>;
+  return <h1>Powered by Socket.io</h1>;
 };
 
 export default SocketIOClient;

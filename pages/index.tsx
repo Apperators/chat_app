@@ -1,33 +1,38 @@
-import { Avatar, Button, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import prisma from "../lib/prisma";
-import Post, { PostProps } from "../components/Post";
+import Message, { MessageProps } from "../components/Message";
 import SocketIOClient from "./SocketIOClient";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: { published: false },
+  const msgs = await prisma.message.findMany({
     include: {
-      author: {
-        select: { name: true },
-      },
+      author: true,
     },
   });
-  return { props: { feed } };
+
+  const messages = msgs.map((msg) => ({
+    ...msg,
+    author: {
+      ...msg.author,
+      createdAt: msg.author.createdAt.toISOString(),
+      updatedAt: msg.author.updatedAt.toISOString(),
+    },
+  }));
+
+  return { props: { messages } };
 };
 
 const Header = styled.h1`
-  color: red;
+  color: blue;
   line-height: 1.15;
   font-size: 4rem;
 `;
 
 type Props = {
-  feed: PostProps[];
+  messages: MessageProps[];
 };
 
 const Home: NextPage<Props> = (props) => {
@@ -44,51 +49,14 @@ const Home: NextPage<Props> = (props) => {
 
       <main className={styles.main}>
         <Header>Chat App</Header>
-        {props.feed.map((post) => (
-          <div key={post.id} className="post">
-            <Post post={post} />
+        {props.messages.map((message) => (
+          <div key={message.id} className="message">
+            <Message message={message} />
           </div>
         ))}
-        <Wrap>
-          <WrapItem>
-            <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
-          </WrapItem>
-          <WrapItem>
-            <Avatar name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
-          </WrapItem>
-          <WrapItem>
-            <Avatar name="Ryan Florence" src="https://bit.ly/ryan-florence" />
-          </WrapItem>
-        </Wrap>
-
-        <Stack direction="row" spacing={4} align="center">
-          <Button colorScheme="teal" variant="solid">
-            Button
-          </Button>
-          <Button colorScheme="teal" variant="outline">
-            Button
-          </Button>
-          <Button colorScheme="teal" variant="ghost">
-            Button
-          </Button>
-          <Button colorScheme="teal" variant="link">
-            Button
-          </Button>
-        </Stack>
       </main>
       <SocketIOClient />
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <footer className={styles.footer}>Apperators 2022</footer>
     </div>
   );
 };
