@@ -11,10 +11,12 @@ datasource db {
 }
 
 model Message {
-  id       String @id @default(cuid())
-  content  String
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
 }
 
 model User {

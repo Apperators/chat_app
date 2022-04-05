@@ -15,6 +15,8 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const messages = msgs.map((msg) => ({
     ...msg,
+    createdAt: msg.createdAt.toISOString(),
+    updatedAt: msg.updatedAt.toISOString(),
     author: {
       ...msg.author,
       createdAt: msg.author.createdAt.toISOString(),
