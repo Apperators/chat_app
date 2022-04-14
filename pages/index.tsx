@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import prisma from "../lib/prisma";
 import Message, { MessageProps } from "../components/Message";
 import SocketIOClient from "./SocketIOClient";
+import Login from "../components/Login";
 
 export const getStaticProps: GetStaticProps = async () => {
   const msgs = await prisma.message.findMany({
@@ -48,7 +49,7 @@ const Home: NextPage<Props> = (props) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <Login />
       <main className={styles.main}>
         <Header>Chat App</Header>
         {props.messages.map((message) => (
