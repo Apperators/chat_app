@@ -22,11 +22,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: ESLint (JS/TS) Action 
+      # You may pin to the exact commit or the version.
+      # uses: iCrawl/action-eslint@ff2a58dcbc1aaec51815d58e8bf70962c4f2b557
+      uses: iCrawl/action-eslint@v1
+      #with:
+        # Custom glob to overwrite which files to lint.
+        #custom-glob: # optional, default is src
+        
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
