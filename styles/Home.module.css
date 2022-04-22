@@ -1,7 +1,10 @@
-/* .container {
-  padding: 0 2rem;
+.container {
+  background-color: black;
+  color: white;
+  height: 100%;
 }
 
+/* 
 .main {
   flex: 1;
   display: flex;
