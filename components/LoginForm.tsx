@@ -1,10 +1,11 @@
-import { Button, Container, FormControl, FormErrorMessage, FormLabel, Heading, Input, VStack } from "@chakra-ui/react";
-import router from "next/router";
+import { Text, Button, Container, FormControl, FormErrorMessage, FormLabel, Heading, Input, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import styled from "@emotion/styled";
+import useUser from "../lib/useUser";
+import fetchJson, { FetchError } from "../lib/fetchJson";
 
 interface FormData {
-  email: {
+  username: {
     value: string;
     touched: boolean;
   },
@@ -25,20 +26,44 @@ const Layout = styled.div({
 
 
 const LoginForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({ email: { value: '', touched: false }, password: { value: '', touched: false } })
+  // here we just check if user is already logged in and redirect to profile
+  const { mutateUser } = useUser({
+    redirectTo: '/',
+    redirectIfFound: true,
+  })
+  const [formData, setFormData] = useState<FormData>({ username: { value: '', touched: false }, password: { value: '', touched: false } })
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const handleEmailChange = (e: any) => setFormData({ ...formData, email: { value: e.target.value, touched: true } })
+  const handleUsernameChange = (e: any) => setFormData({ ...formData, username: { value: e.target.value, touched: true } })
   const handlePasswordChange = (e: any) => setFormData({ ...formData, password: { value: e.target.value, touched: true } })
-  const handleSubmit = (e: any) => {
-    setFormData({ ...formData, email: { ...formData.email, touched: true }, password: { ...formData.password, touched: true } })
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
-    console.log(formData)
-    router.push('/');
+
+    const body = {
+      username: formData.username.value,
+      password: formData.password.value
+    }
+
+    try {
+      mutateUser(
+        await fetchJson('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+      )
+    } catch (error) {
+      if (error instanceof FetchError) {
+        setErrorMsg(error.data.message)
+      } else {
+        console.error('An unexpected error happened:', error)
+      }
+    }
   }
 
-  const isEmailError = formData.email.value === '' && formData.email.touched
+  const isUsernameError = formData.username.value === '' && formData.username.touched
   const isPasswordError = formData.password.value === '' && formData.password.touched
-  const isFormError = isEmailError || isPasswordError
+  const isFormError = isUsernameError || isPasswordError
 
   return (
     <Layout>
@@ -55,18 +80,17 @@ const LoginForm: React.FC = () => {
           <Heading as='h2' size='2xl'>
             Begin Chatting with Apperators
           </Heading>
-
           <form onSubmit={handleSubmit}>
             <FormControl isInvalid={isFormError} onSubmit={handleSubmit}>
-              <FormLabel htmlFor='email'>Email</FormLabel>
+              <FormLabel htmlFor='username'>Username</FormLabel>
               <Input
-                id='email'
-                type='email'
-                value={formData.email.value}
-                onChange={handleEmailChange}
-                placeholder="Email"
+                id='username'
+                type='text'
+                value={formData.username.value}
+                onChange={handleUsernameChange}
+                placeholder="Username"
               />
-              {isEmailError && <FormErrorMessage>Email is required.</FormErrorMessage>}
+              {isUsernameError && <FormErrorMessage>Username is required.</FormErrorMessage>}
               <FormLabel mt={4} htmlFor='password'>Password</FormLabel>
               <Input
                 id='password'
@@ -87,6 +111,7 @@ const LoginForm: React.FC = () => {
               Start Chatting Now
             </Button>
           </form>
+          {errorMsg && <Text color='tomato'>Error: {errorMsg}</Text>}
         </VStack>
       </Container>
     </Layout>

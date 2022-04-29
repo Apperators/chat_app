@@ -1,44 +1,15 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import prisma from "../lib/prisma";
-import Message, { MessageProps } from "../components/Message";
-import SocketIOClient from "./SocketIOClient";
+import Message, { MessageType } from "../components/Message";
+import SocketIOClient from "../components/SocketIOClient";
 import { Heading } from "@chakra-ui/react";
-import { useEffect } from "react";
-import router from "next/router";
+import { User } from "./api/user";
+import { withSessionSsr } from "../lib/withSession";
+import useMessages from "../lib/useMessages";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const msgs = await prisma.message.findMany({
-    include: {
-      author: true,
-    },
-  });
-
-  const messages = msgs.map((msg) => ({
-    ...msg,
-    createdAt: msg.createdAt.toISOString(),
-    updatedAt: msg.updatedAt.toISOString(),
-    author: {
-      ...msg.author,
-      createdAt: msg.author.createdAt.toISOString(),
-      updatedAt: msg.author.updatedAt.toISOString(),
-    },
-  }));
-
-  return { props: { messages } };
-};
-
-type Props = {
-  messages: MessageProps[];
-};
-
-const Home: NextPage<Props> = (props) => {
-  useEffect(() => {
-    if (true) { // Is user authenticated?
-      router.push('/login');
-    }
-  }, []);
+const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { messages } = useMessages(user)
 
   return (
     <div className={styles.container}>
@@ -52,10 +23,13 @@ const Home: NextPage<Props> = (props) => {
       </Head>
 
       <main className={styles.main}>
-        <Heading as='h2' size='3xl'>
+        <Heading as='h1' size='3xl'>
           Chat App
         </Heading>
-        {props.messages.map((message) => (
+        <Heading as='h4' size='lg'>
+          Logged in as: {user?.username}
+        </Heading>
+        {messages.map((message: MessageType) => (
           <div key={message.id} className="message">
             <Message message={message} />
           </div>
@@ -68,3 +42,25 @@ const Home: NextPage<Props> = (props) => {
 };
 
 export default Home;
+
+export const getServerSideProps = withSessionSsr(async function ({
+  req,
+  res,
+}) {
+  const user = req.session.user
+  console.log('🤹‍♂️ user session:', user)
+  if (user === undefined) {
+    res.setHeader('location', '/login')
+    res.statusCode = 302
+    res.end()
+    return {
+      props: {
+        user: { isLoggedIn: false, username: '' } as User,
+      },
+    }
+  }
+
+  return {
+    props: { user: req.session.user },
+  }
+})

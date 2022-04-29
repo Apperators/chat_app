@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export type MessageProps = {
+export type MessageType = {
   id: string;
   content: string;
   authorId: string;
@@ -16,7 +16,7 @@ export type MessageProps = {
   };
 };
 
-const Message: React.FC<{ message: MessageProps }> = ({ message }) => {
+const Message: React.FC<{ message: MessageType }> = ({ message }) => {
   const authorName = message.author ? message.author.name : "Unknown author";
   return (
     <Box p={5} shadow="md" borderWidth="1px">
