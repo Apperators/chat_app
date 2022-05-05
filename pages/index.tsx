@@ -3,7 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Message, { MessageType } from "../components/Message";
 import SocketIOClient from "../components/SocketIOClient";
-import { Heading } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import { User } from "./api/user";
 import { withSessionSsr } from "../lib/withSession";
 import useMessages from "../lib/useMessages";
@@ -42,19 +42,17 @@ const Home = ({
           </div>
         ))}
       </main>
-      <a
-        href="/api/logout"
+      <Button
+        colorScheme="teal"
+        variant="ghost"
         onClick={async (e) => {
-          e.preventDefault()
-          mutateUser(
-            await fetchJson('/api/logout', { method: 'POST' }),
-            false
-          )
-          router.push('/login')
+          e.preventDefault();
+          mutateUser(await fetchJson("/api/logout", { method: "POST" }), false);
+          router.push("/login");
         }}
       >
         Logout
-      </a>
+      </Button>
       <SocketIOClient />
       <footer className={styles.footer}>Apperators 2022</footer>
     </div>
