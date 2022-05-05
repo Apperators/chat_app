@@ -3,7 +3,6 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import LoginForm from "../components/LoginForm";
 
-
 const Login: NextPage = () => {
     return (
         <div className={styles.container}>
