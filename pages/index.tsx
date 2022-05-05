@@ -7,11 +7,16 @@ import { Heading } from "@chakra-ui/react";
 import { User } from "./api/user";
 import { withSessionSsr } from "../lib/withSession";
 import useMessages from "../lib/useMessages";
+import useUser from "../lib/useUser";
+import fetchJson from "../lib/fetchJson";
+import { useRouter } from "next/router";
 
 const Home = ({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { messages } = useMessages(user);
+  const { mutateUser } = useUser();
+  const router = useRouter();
 
   return (
     <div className={styles.container}>
@@ -37,6 +42,19 @@ const Home = ({
           </div>
         ))}
       </main>
+      <a
+        href="/api/logout"
+        onClick={async (e) => {
+          e.preventDefault()
+          mutateUser(
+            await fetchJson('/api/logout', { method: 'POST' }),
+            false
+          )
+          router.push('/login')
+        }}
+      >
+        Logout
+      </a>
       <SocketIOClient />
       <footer className={styles.footer}>Apperators 2022</footer>
     </div>
