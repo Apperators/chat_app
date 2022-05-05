@@ -8,13 +8,15 @@ import { User } from "./api/user";
 import { withSessionSsr } from "../lib/withSession";
 import useMessages from "../lib/useMessages";
 
-const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { messages } = useMessages(user)
+const Home = ({
+  user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { messages } = useMessages(user);
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Devin Chat App</title>
+        <title>Apperators Chat App</title>
         <meta
           name="description"
           content="This is for the almighty Devin Chat App"
@@ -23,10 +25,10 @@ const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) 
       </Head>
 
       <main className={styles.main}>
-        <Heading as='h1' size='3xl'>
+        <Heading as="h1" size="3xl">
           Chat App
         </Heading>
-        <Heading as='h4' size='lg'>
+        <Heading as="h4" size="lg">
           Logged in as: {user?.username}
         </Heading>
         {messages.map((message: MessageType) => (
@@ -43,24 +45,21 @@ const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) 
 
 export default Home;
 
-export const getServerSideProps = withSessionSsr(async function ({
-  req,
-  res,
-}) {
-  const user = req.session.user
-  console.log('🤹‍♂️ user session:', user)
+export const getServerSideProps = withSessionSsr(async function ({ req, res }) {
+  const user = req.session.user;
+  console.log("🤹‍♂️ user session:", user);
   if (user === undefined) {
-    res.setHeader('location', '/login')
-    res.statusCode = 302
-    res.end()
+    res.setHeader("location", "/login");
+    res.statusCode = 302;
+    res.end();
     return {
       props: {
-        user: { isLoggedIn: false, username: '' } as User,
+        user: { isLoggedIn: false, username: "" } as User,
       },
-    }
+    };
   }
 
   return {
     props: { user: req.session.user },
-  }
-})
+  };
+});
