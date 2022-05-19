@@ -1,8 +1,9 @@
-#### This is the frontend domain.
+### NextJS Full-stack Chat App
 
-#### No permission allow.
-
-### NextJS Full-stack chat app
+#### To Run Locally
+1. Pull Code down
+2. ``npm install``
+3. ``npm run dev``
 
 ### Primsa steps
 
@@ -11,5 +12,3 @@
 3. Create dummy data if needed: `npx prisma studio`
 4. Regenerate Prisma client `npx prisma generate`
 5. Refresh browser or restart app if needed
-
-PUSH TEST
