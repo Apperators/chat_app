@@ -1,3 +1,4 @@
+import { Message, User } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { MessageType } from "../../components/Message";
 import prisma from "../../lib/prisma";
@@ -23,7 +24,7 @@ async function messagesRoute(
       },
     });
 
-    const messages = msgs.map((msg) => ({
+    const messages = msgs.map((msg: Message & { author: User }) => ({
       ...msg,
       createdAt: msg.createdAt.toISOString(),
       updatedAt: msg.updatedAt.toISOString(),
