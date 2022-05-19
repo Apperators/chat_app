@@ -3,7 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Message, { MessageType } from "../components/Message";
 import SocketIOClient from "../components/SocketIOClient";
-import { Button, Heading } from "@chakra-ui/react";
+import { Box, Button, Heading } from "@chakra-ui/react";
 import { User } from "./api/user";
 import { withSessionSsr } from "../lib/withSession";
 import useMessages from "../lib/useMessages";
@@ -30,17 +30,24 @@ const Home = ({
       </Head>
 
       <main className={styles.main}>
-        <Heading as="h1" size="3xl">
-          Chat App
-        </Heading>
-        <Heading as="h4" size="lg">
-          Logged in as: {user?.username}
-        </Heading>
-        {messages.map((message: MessageType) => (
-          <div key={message.id} className="message">
-            <Message message={message} />
-          </div>
-        ))}
+        <Box
+          display="flex"
+          flexDirection="column"
+          backgroundColor="primary.100"
+        >
+          <Heading as="h1" size="3xl">
+            Chat App
+          </Heading>
+          <Heading as="h4" size="lg">
+            Logged in as: {user?.username}
+          </Heading>
+
+          {messages.map((message: MessageType) => (
+            <div key={message.id} className="message">
+              <Message message={message} />
+            </div>
+          ))}
+        </Box>
       </main>
       <Button
         colorScheme="teal"
