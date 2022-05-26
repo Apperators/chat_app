@@ -3,20 +3,16 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Message, { MessageType } from "../components/Message";
 import SocketIOClient from "../components/SocketIOClient";
-import { Box, Button, Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import { User } from "./api/user";
 import { withSessionSsr } from "../lib/withSession";
 import useMessages from "../lib/useMessages";
-import useUser from "../lib/useUser";
-import fetchJson from "../lib/fetchJson";
-import { useRouter } from "next/router";
+import Sidebar from "../components/Sidebar";
 
 const Home = ({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { messages } = useMessages(user);
-  const { mutateUser } = useUser();
-  const router = useRouter();
 
   return (
     <div className={styles.container}>
@@ -28,40 +24,32 @@ const Home = ({
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <Sidebar />
+          <Box
+            display="flex"
+            flexDirection="column"
+            backgroundColor="primary.100"
+            width="85%"
+          >
+            <Heading as="h1" size="3xl">
+              Chat App
+            </Heading>
+            <Heading as="h4" size="lg">
+              Logged in as: {user?.username}
+            </Heading>
 
-      <main className={styles.main}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          backgroundColor="primary.100"
-        >
-          <Heading as="h1" size="3xl">
-            Chat App
-          </Heading>
-          <Heading as="h4" size="lg">
-            Logged in as: {user?.username}
-          </Heading>
-
-          {messages.map((message: MessageType) => (
-            <div key={message.id} className="message">
-              <Message message={message} />
-            </div>
-          ))}
-        </Box>
-      </main>
-      <Button
-        colorScheme="teal"
-        variant="ghost"
-        onClick={async (e) => {
-          e.preventDefault();
-          mutateUser(await fetchJson("/api/logout", { method: "POST" }), false);
-          router.push("/login");
-        }}
-      >
-        Logout
-      </Button>
-      <SocketIOClient />
-      <footer className={styles.footer}>Apperators 2022</footer>
+            {messages.map((message: MessageType) => (
+              <div key={message.id} className="message">
+                <Message message={message} />
+              </div>
+            ))}
+          </Box>
+        </main>
+        <SocketIOClient />
+        <footer className={styles.footer}>Apperators 2022</footer>
+      </div>
     </div>
   );
 };
