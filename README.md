@@ -3,7 +3,8 @@
 #### To Run Locally
 1. Pull Code down
 2. ``npm install``
-3. ``npm run dev``
+3. ``npx prisma generate``
+4. ``npm run dev``
 
 ### Primsa steps
 

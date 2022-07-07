@@ -16,9 +16,9 @@ model Message {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  String 
-  channel   Channel  @relation(fields: [categoryId], references: [id]) 
-  channelId String
+  authorId  String
+  channel   Channel? @relation(fields: [channelId], references: [id])
+  channelId Int?
 }
 
 model User {
@@ -32,16 +32,9 @@ model User {
   @@map(name: "users")
 }
 
-model Category {
-  id       String @id @default(autoincrement())
-  name     String @unique
-  channels Channel[] @relation(references: [id])
-}
-
 model Channel {
-  id         String @id @default(autoincrement())
-  name       String @unique
-  updatedAt  DateTime @upadatedAt @map(name: "update_at")
-  category   Category @relation(fields: [categoryId], references: [id]) 
-  categoryId String
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  updatedAt  DateTime  @updatedAt @map(name: "update_at")
+  Message    Message[]
 }
